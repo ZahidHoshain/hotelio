@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BankLedger;
+use Yajra\Datatables\Datatables;
 use App\Models\Bank;
 use Exception;
 
@@ -18,10 +19,22 @@ class BankLedgerController extends Controller
     {
         // return BankLedger::all();
         $BankNames = Bank::all();
-        $BankLedgers = BankLedger::select('bank_ledgers.*', 'banks.Name as Bank')
-            ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
-            ->get();
-        return view('bankLedger.index', compact('BankLedgers','BankNames'));
+        // $BankLedgers = BankLedger::select('bank_ledgers.*', 'banks.Name as Bank')
+        //     ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
+        //     ->get();
+
+        if (request()->ajax()) {
+            return $BankLedgers = Datatables::of($this->dtQuery())
+            ->addColumn('action','layouts.dt_buttons')
+            ->make(true);
+        }
+        return view('bankLedger.index', compact('BankNames'));
+    }
+    public function dtQuery()
+    {
+        return $BankLedgers = BankLedger::select('bank_ledgers.*','banks.Name as Bank')
+        ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
+        ->get();
     }
 
     /**
@@ -102,6 +115,12 @@ class BankLedgerController extends Controller
         return back()->with('Delete', 'Delete Bank Ledger Successfull');
     }
 
+    public function deleteAll()
+    {
+        BankLedger::withTrashed()->delete();
+        return back();
+    }
+
     public function trash()
     {
         // return BankLedger::all();
@@ -109,5 +128,29 @@ class BankLedgerController extends Controller
             ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
             ->get();
         return view('bankLedger.trash', compact('BankLedgers'));
+    }
+
+    public function restore($id)
+    {
+        BankLedger::withTrashed()->where('id', $id)->restore();
+        return back();
+    }
+
+    public function restoreAll()
+    {
+        BankLedger::withTrashed()->restore();
+        return back()->with('Restore All','Bank Ledger Restore Successfull');
+    }
+
+    public function forceDelete($id)
+    {
+        BankLedger::withTrashed()->where('id', $id)->forceDelete();
+        return back();
+    }
+
+    public function emtyTrash()
+    {
+       BankLedger::onlyTrashed()->forceDelete();
+       return back(); 
     }
 }

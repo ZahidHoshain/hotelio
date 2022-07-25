@@ -84,40 +84,40 @@
             let ID = $(this).val();
             Swal.fire({
 
-                    title: 'Are you sure?',
-                    text: "Do you want to restore it!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, restore it!'
+                title: 'Are you sure?',
+                text: "Do you want to restore it!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, restore it!'
 
-                }).then((result) => {
+            }).then((result) => {
 
-                    if (result.isConfirmed) {
+                if (result.isConfirmed) {
 
-                        $.ajax({
-                            type:'GET',
-                            url:'/room/'+ID+'/restore/',
-                            success:function(data){
+                    $.ajax({
+                        type:'GET',
+                        url:'/room/'+ID+'/restore/',
+                        success:function(data){
+                        Swal.fire(
+                            'Resoted!',
+                            'Your file has been restored.',
+                            'success'
+                            );
+                        },
+                        error:function(data){
                             Swal.fire(
-                                'Resoted!',
-                                'Your file has been restored.',
-                                'success'
-                                );
-                            },
-                            error:function(data){
-                                Swal.fire(
-                                'Error!',
-                                'Resoted failed !',
-                                'error'
-                                );
+                            'Error!',
+                            'Resoted failed !',
+                            'error'
+                            );
 
-                                console.log(data);
-                            },
-                        });
-                    }
-                });
+                            console.log(data);
+                        },
+                    });
+                }
+            });
         });
         
         $('#RestoreAllBtn').on('click',function(e){

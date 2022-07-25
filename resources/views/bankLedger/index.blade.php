@@ -15,12 +15,13 @@
                         </h2>
                     </div>
                     <a class="btn btn-sm bg-navy float-right text-capitalize" href="bankLedger/trash"><i class="fa-solid fa-recycle mr-2"></i>View Trash</a>
-                    <a class="btn btn-sm bg-maroon float-right text-capitalize mr-3" id="AllDeleteBtn" ><i class="fa-solid fa-trash-can mr-2"></i>Delete All</a>
+                    <button class="btn btn-sm bg-maroon float-right text-capitalize mr-3" id="AllDeleteBtn" ><i class="fa-solid fa-trash-can mr-2"></i>Delete All</button>
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-nowrap DataTable">
+                    <table class="table table-hover text-nowrap DataTable" id="BankLedgerList">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Bank</th>
                                 <th>Deposit</th>
                                 <th>Withdraw</th>
@@ -31,27 +32,6 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($BankLedgers as $BankLedger)
-                            <tr>
-                                <td>{{$BankLedger->Bank}}</td>
-                                <td>{{$BankLedger->Deposit}}</td>
-                                <td>{{$BankLedger->Withdraw}}</td>
-                                <td>{{$BankLedger->Date}}</td>
-                                <td>{{$BankLedger->Description}}</td>
-                                <td class="d-flex">
-                                    <button class="EditBtn mx-2" type="button" value="{{$BankLedger->id}}" data-bs-placement="bottom" title="Edit">
-                                        <i class="fa-regular fa-pen-to-square mr-3 text-black text-orange"></i></i>
-                                    </button>
-                                    <!-- {{ Form::open(['url' => '/bankLedger/'.$BankLedger->id,'method' => 'DELETE'])}} -->
-
-                                    <button class="DeleteBtn" data-bs-toggle="tooltip" type="button" value="{{$BankLedger->id}}"  data-bs-placement="bottom" title="Delete">
-
-                                        <i class="fa-regular fa-trash-can mr-3 text-black text-danger"></i>
-                                    </button>
-                                    {{ Form::close() }}
-                                </td>
-                            </tr>
-                            @endforeach
                         </tbody>
 
                     </table>
@@ -202,6 +182,25 @@
 </div>
 <script>
     $(document).ready(function() {
+        $.noConflict();
+        var BankLedgerList = $('#BankLedgerList').DataTable({
+            serverSide:true,
+            processing:true,
+            responsive:true,
+            ajax:{
+                url:'/bankLedger',
+                type:'GET',
+            },
+            columns:[
+                {data:'id',visible:false},
+                {data:'Bank'},
+                {data:'Deposit'},
+                {data:'Withdraw'},
+                {data:'Date'},
+                {data:'Description'},
+                {data:'action',name:'action'}
+            ],
+        });
         $('#AddBtn').on('click', function(e) {
             e.preventDefault();
             $('#BankLedgerModal').modal('show');
@@ -322,7 +321,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: 'GET',
-                        url: '/bankLedger/delete',
+                        url: '/bankLedger/delete/',
                         success: function(data) {
                             Swal.fire(
                                 'All Deleted!',
