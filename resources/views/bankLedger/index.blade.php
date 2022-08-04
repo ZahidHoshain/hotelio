@@ -180,13 +180,64 @@
         </div>
     </div>
 </div>
+<style>
+    .copy {
+        /* color: $yellow-300; */
+        color: white;
+        background-color: #290661;
+    }
+
+    .copy:hover {
+        /* color: $yellow-300; */
+        color: AliceBlue;
+        background-color: MidnightBlue;
+    }
+
+    .pdf {
+        color: AliceBlue;
+        background-color: #084298;
+    }
+
+    .pdf:hover {
+        color: AliceBlue;
+        background-color: #052c65;
+
+    }
+</style>
 <script>
     $(document).ready(function() {
         $.noConflict();
         var BankLedgerList = $('#BankLedgerList').DataTable({
+            dom: 'CBrfiltip',
             serverSide:true,
             processing:true,
             responsive:true,
+            buttons: [{
+                    extend: 'copy',
+                    text: '<button class="btn copy"><i class="fa fa-copy"></i></button>',
+                    titleAttr: 'Copy Items',
+                    filename: 'account_ledger_list',
+
+                },
+                {
+                    extend: 'excel',
+                    text: '<button class="btn btn-success"><i class="fa-solid fa-file-excel"></i></button>',
+                    titleAttr: 'Export to Excel',
+                    filename: 'account_ledger_list',
+                },
+                {
+                    extend: 'pdf',
+                    text: '<button class="btn pdf"><i class="fa-solid fa-file-pdf"></i></button>',
+                    titleAttr: 'Export to PDF',
+                    filename: 'account_ledger_list',
+                },
+                {
+                    extend: 'csv',
+                    text: '<button class="btn btn-info"><i class="fa-solid fa-file-csv"></i></button>',
+                    titleAttr: 'Export to CSV',
+                    filename: 'account_ledger_list',
+                },
+            ],
             ajax:{
                 url:'/bankLedger',
                 type:'GET',
@@ -220,6 +271,7 @@
                 url: "/bankLedger",
                 data: $('#NewBankLedgerForm').serializeArray(),
                 success: function(data) {
+                    BankLedgerList.draw(false);
                     $('#NewBankLedgerForm')[0].reset();
                     $('#BankLedgerModal').modal('hide');
                     Swal.fire(
@@ -233,9 +285,10 @@
                 }
             });
         });
-        $('.EditBtn').on('click',function(e){
+        $('body').on('click','#EditBtn',function(e){
             e.preventDefault();
-            var ID = $(this).val();
+            var ID = $(this).data('id');
+            // console.log(ID);
             $.ajax({
                 type:'GET',
                 url:'/bankLedger/'+ID,
@@ -261,8 +314,9 @@
             $.ajax({
                 type:'PATCH',
                 url: '/bankLedger/'+ID,
-                data: $('#EditBankLedgerForm') .serializeArray(),
+                data: $('#EditBankLedgerForm').serializeArray(),
                 success:function(data){
+                    BankLedgerList.draw(false);
                     $('#EditBankLedgerModal').modal('hide');
                     $('#EditBankLedgerForm')[0].reset();
                     Swal.fire(
@@ -276,14 +330,19 @@
                 }
             });
         });
-        $('.DeleteBtn').on('click',function(e){
+        $('body').on('click','#DeleteBtn', function(e){
             e.preventDefault();
-            var ID = $(this).val();
+            var ID = $(this).data('id');
             // console.log(ID);
             Swal.fire({
-                icon: 'error',
+                icon: 'warning',
                 title: 'Are you sure ?',
                 text: 'You wont be able to revert this!',
+                showCancelButton : true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor : '#d33',
+                confirmButtonText : 'Yes , delete it !',
+                footer: '<a href="">Why do I have this issue?</a>',
                 footer: '<a href="">Why do I have this issue?</a>'
             }).then((result) =>{
                 if(result.isConfirmed){
@@ -291,6 +350,7 @@
                         type:'GET',
                         url:'/bankLedger/delete/'+ID,
                         success:function(data){
+                            BankLedgerList.draw(false);
                             Swal.fire(
                                 'Deleted!',
                                 'Your file has been deleted.',
@@ -323,6 +383,7 @@
                         type: 'GET',
                         url: '/bankLedger/delete/',
                         success: function(data) {
+                            BankLedgerList.draw(false);
                             Swal.fire(
                                 'All Deleted!',
                                 'Your file has been deleted.',
