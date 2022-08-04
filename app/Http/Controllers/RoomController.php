@@ -19,6 +19,7 @@ class RoomController extends Controller
     public function index()
     {
         $Hotels = Hotel::all();
+        // $Rooms  = Room::all();
         if (request()->ajax()) {
             return $Rooms = Datatables::of($this->dtQuery())->addColumn('action','layouts.dt_buttons')->make(true);
         }
@@ -75,7 +76,7 @@ class RoomController extends Controller
         ->where('rooms.id',$id)
         ->leftJoin('hotels','rooms.HotelID','=','hotels.id')
         ->first();
-        return view('room.show',compact('Room'));
+        return $Room;
     }
 
     /**
