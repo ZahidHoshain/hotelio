@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Employee;
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Yajra\Datatables\Datatables;
+use App\Models\Bank;
 
-
-class UserController extends Controller
+class BankController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,12 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        // $Users = User::select('users.*','users.EmployeeID as Employee')
-        // ->get();
-        if (request()->ajax()) {
-            return Datatables::of(User::all())->addColumn('action','layouts.dt_buttons_2')->make(true);
-        }
-        return view('user.index');
+        return response()->json(Bank::all());
     }
 
     /**
@@ -32,7 +25,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        //
     }
 
     /**
@@ -54,7 +47,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Bank::find($id),200);
     }
 
     /**
@@ -65,7 +58,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        return view('user.edit');
+        //
     }
 
     /**
@@ -88,15 +81,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
-        return back();
-    }
-   /**
-     * Delete all table list
-    */
-    public function destroyAll()
-    {
-        User::withTrashed()->delete();
-        return back();
+        //
     }
 }
