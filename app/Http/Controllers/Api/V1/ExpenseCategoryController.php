@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Bank;
+use App\Models\ExpenseCategory;
 
-class BankController extends Controller
+class ExpenseCategoryController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +15,7 @@ class BankController extends Controller
      */
     public function index()
     {
-        return response()->json(Bank::all());
+        return response()->json(ExpenseCategory::all());
     }
 
     /**
@@ -48,7 +47,7 @@ class BankController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Bank::find($id),200);
+        return response()->json(ExpenseCategory::find($id));
     }
 
     /**

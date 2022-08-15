@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\TaxSetting;
 use Illuminate\Http\Request;
-use App\Models\Bank;
 
-class BankController extends Controller
+class TaxSettingController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +15,7 @@ class BankController extends Controller
      */
     public function index()
     {
-        return response()->json(Bank::all());
+        return response()->json(TaxSetting::all(),200);
     }
 
     /**
@@ -48,7 +47,7 @@ class BankController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Bank::find($id),200);
+        return response()->json(TaxSetting::find($id),200);
     }
 
     /**
