@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Bank;
 
-class BankController extends Controller
+class UserController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +15,7 @@ class BankController extends Controller
      */
     public function index()
     {
-        return response()->json(Bank::all());
+        return response()->json(User::all(),200);
     }
 
     /**
@@ -37,7 +36,6 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -48,7 +46,7 @@ class BankController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Bank::find($id),200);
+        return response()->json(User::find($id),200);
     }
 
     /**
