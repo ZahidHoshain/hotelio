@@ -31,8 +31,8 @@
                                 </tr>
                             </thead>
 
-                            {{-- <tbody>
-                                @foreach ($Bookings as $Booking)
+                            <tbody>
+                                {{-- @foreach ($Bookings as $Booking)
                                     <tr class="border-bottom">
                                         <td>{{$Booking->Room}}</td>
                                         <td>{{$Booking->Guest}}</td>
@@ -54,8 +54,8 @@
                                             {{-- {{ Form::close() }}  --}}
                                         {{-- </td>
                                     </tr>
-                                @endforeach
-                            </tbody> --}}
+                                @endforeach --}}
+                            </tbody> 
                            
                         </table>
                     </div>
@@ -81,11 +81,8 @@
                                 <div class="col-md-7">
                                     <select type="number" name="RoomID" id=""  class="form-select" required>
                                         <option value="">Select Room</option>
-                                        @foreach ($Rooms as $Room)
+                                        @foreach ($Rooms as $Room)  
                                             <option value="{{ $Room->id }}">{{ $Room->RoomNo }}</option>
-                                            @if(!$Room->Status)
-                                                <option value="{{ $Room->id }}">{{ $Room->RoomNo }}</option>
-                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -138,9 +135,8 @@
                                         <div class="col-md-8">
                                             <select type="number" name="RoomID" id="EditRoom"  class="form-select" value="">
                                                 <option value="">Select Room</option>
-
                                                 @foreach ($Rooms as $Room)  
-                                                    <option value="{{ $Room->id }}">{{ $Room->RoomNo }}</option>
+                                                    <option value="{{ $Room->id }}" selected>{{ $Room->RoomNo }}</option>
                                                 @endforeach
 
                                             </select>
@@ -162,9 +158,7 @@
                                     <div class="form-group row">
                                         <label for="CheckInDate" class="form-label col-md-3">CheckInDate:</label>
                                         <div class="col-md-8">
-
                                             <input type="text" name="CheckInDate" id="EditCheckInDate" class="form-control">
-
                                         </div>
                                     </div>
                                 </div>
@@ -177,195 +171,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function(){
-
-            $.noConflict();
-            var BookingList = $('#BookingList').DataTable({
-                serverSide:true,
-                processing:true,
-                colReorder:true,
-                stateSave:true,
-                responsive:true,
-                ajax:{
-                    url:'/booking',
-                    type:'GET'
-                },
-                columns:[
-                    {data:'Room'},
-                    {data:'Guest'},
-                    {data:'CheckInDate'},
-                    {data:'action',name:'action'},
-                ]
-            })
-
-            $( function() {
-                var $j = jQuery.noConflict();
-                $j("#EditCheckInDate").datepicker();
-            });
-
-            $('#ResetBtnForm').on('click',function(e){
-                e.preventDefault();
-                $('#NewBookingForm')[0].reset();
-            });
-
-            $('#SubmitBtn').on('click',function(e){
-                e.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: "/booking",
-                    data: $('#NewBookingForm').serializeArray(),
-                    success: function (data) {
-                        $('#NewBookingForm')[0].reset();
-                        $('#NewBookingModal').modal('hide');
-                        Swal.fire(
-                            'Success !',
-                            data,
-                            'success'
-                        )
-
-                        BookingList.draw(false);
-                    },
-                    error:function(data){
-                        console.log('Error while adding new Booking' + data);
-                    }
-                });
-            });
-
-            $('.EditBtn').on('click',function(e){
-                jQuery.noConflict();
-                e.preventDefault();
-                var ID = $(this).val();
-                $.ajax({
-                    type:"GET",
-                    url: "/booking/"+ID,
-                    success: function (data) {
-                        $('#EditBookingForm')[0].reset();
-                        $('#IDEdit').val(data['id']);
-                        $('#EditRoom').val(data['RoomID']);
-                        $('#EditGuest').val(data['GuestID']);
-
-                        var date = new Date(data['CheckInDate']);
-                        var d = date.getDate();
-                        var m = date.getMonth()+1;
-                        var y = date.getFullYear();
-
-                        CheckInDate = d + '/' + m + '/' + y;
-                        console.log(CheckInDate);
-                        $('#EditCheckInDate').val(CheckInDate);
-
-                        $('#EditBookingModal').modal('show');
-                    },
-                    error:function(data){
-                        console.log(data);
-                    }
-                });
-            });
-
-            $('#UpdateBtn').on('click',function(e){
-                e.preventDefault();
-                var ID = $('#IDEdit').val();
-                $.ajax({
-                    type: "PATCH",
-                    url: "/booking/"+ID,
-                    data: $('#EditBookingForm').serializeArray(),
-                    success: function (data) {
-                        $('#EditBookingForm')[0].reset();
-                        $('#EditBookingModal').modal('hide');
-                        Swal.fire(
-                            'success',
-                            'Booking updated successfully',
-                            'success'
-                        );
-                    },
-                    error:function(data){
-                        console.log(data);
-                    }
-                });
-            });
-
-            $('.DeleteBtn').on('click',function(e){
-                e.preventDefault();
-                // console.log($(this).val());
-                let ID = $(this).val();
-                Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    $.ajax({
-                        type:'GET',
-                        url:'/booking/delete/'+ID,
-                        success:function(data){
-                           Swal.fire(
-                              'Deleted!',
-                              'Your file has been deleted.',
-                              'success'
-                            );
-                        },
-                        error:function(data){
-                            Swal.fire(
-                              'Error!',
-                              'Delete failed !',
-                              'error'
-                            );
-
-                            console.log(data);
-                        },
-                    });
-
-                    
-                 }
-                });
-            });
-            
-            $('#DeleteAllBtn').on('click',function(e){
-                e.preventDefault();
-                Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to DeleteAll this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, DeleteAll it!'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    $.ajax({
-                        type:'GET',
-                        url:'/booking/delete',
-                        success:function(data){
-                           Swal.fire(
-                              'DeleteAll!',
-                              'Your file has been DeleteAll.',
-                              'success'
-                            );
-                        },
-                        error:function(data){
-                            Swal.fire(
-                              'Error!',
-                              'DeleteAll failed !',
-                              'error'
-                            );
-
-                            console.log(data);
-                        },
-                    });
-
-                    
-                 }
-                });
-            })
-
-
-
-
-         });
-    </script>
-@endsection
+    <script src="{{ asset('js/custom-js/booking.js') }}"></script>
+@endsection 

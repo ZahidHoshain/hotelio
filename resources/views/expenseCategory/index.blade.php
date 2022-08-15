@@ -7,40 +7,23 @@
                     <div class="card-header bg-defult">
                         <div class="card-title">
                             <h2 class="card-title">
-                                {{-- <a href="{{ asset('expense/category/create') }}" class="btn bg-navy text-capitalize mr-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create Booking"> 
-                                    <i class="fa-solid fa-circle-plus mr-2"></i>
-                                    Add
-                                </a> --}}
                                 <button type="button" class="btn bg-navy text-capitalize mr-3" id="AddNewBtn"><i class="fa-solid fa-circle-plus mr-2"></i>Add New</button>
                                 Expense Category List
                             </h2>
                         </div>
                     </div>
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap ListTable">
+                        <table class="table table-hover table-responsive table-borderless " id="ExpenseCategoryList">
 
                             <thead>
-                                <tr class="border-bottom p-md-5">
+                                <tr class="border-bottom">
                                     <th class="pr-5">Name</th>
                                     <th class="pl-5">Action</th>
                                 </tr>
                             </thead>
                           
                             <tbody>
-                                @foreach ($ExpenseCategoris as $Category)
-                                    <tr class="border-bottom">
-                                        <td class="pr-5">{{$Category->Name}}</td>
-                                        <td class="d-flex pl-5">
-                                           <a href="{{URL::to('expense/category/'.$Category->id)}}" class="mr-3 text-purple" data-bs-toggle="View" data-bs-placement="bottom" title="View">
-                                                <svg data-v-9a6e255c="" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="invoice-row-5036-preview-icon" class="mx-1 feather feather-eye"><path data-v-9a6e255c="" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle data-v-9a6e255c="" cx="12" cy="12" r="3"></circle></svg>
-                                           </a>
-                                            {{-- <a class="" href="/expense/category/{{ $Category->id }}/edit" data-bs-toggle="Edit" data-bs-placement="bottom" title="Edit">
-                                                <i class="fa-regular fa-pen-to-square mr-3 text-orange"></i></i>
-                                            </a> --}}
-                                            <button class="EditBtn" value="{{$Category->id}}" title="Edit" ><i class="fa-regular fa-pen-to-square mr-3 text-orange"></i></button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                
                             </tbody>
                            
                         </table>
@@ -75,10 +58,6 @@
                                 </div>
                             </div>
                         {{ Form::close()}}   
-                        <!-- <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -112,74 +91,5 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function(){
-            $('#AddNewBtn').on('click',function(e){
-                e.preventDefault();
-                $('#NewCategoryModal').modal('show');
-            });
-            $('#formResetBtn').on('click',function(e){
-                e.preventDefault();
-                $('#categoryForm')[0].reset();
-            });
-            $('#submitBtn').on('click',function(e){
-                e.preventDefault();
-                $.ajax({
-                    type    : 'POST',
-                    url     : '/expense/category',
-                    data    : $('#categoryForm').serializeArray(),success:function(data){
-                        $('#categoryForm')[0].reset();
-                        $('#NewCategoryModal').modal('hide');
-                        Swal.fire(
-                          'Success!',
-                          data,
-                          'success'
-                        );
-                    },
-                    error:function(data){
-                        console.log('Eerror while added category !' + data);
-                    }
-                });
-            });
-            $('.EditBtn').on('click',function(e){
-                e.preventDefault();
-                var ID = $(this).val();
-                $.ajax({
-                    type    : 'GET',
-                    url     : '/expense/category/'+ID,
-                    data    : $('#updateForm').serializeArray(),
-                    success:function(data){
-                        $('#updateForm')[0].reset();
-                        $('#EditId').val(data['id']);
-                        $('#EditName').val(data['Name']);
-                        $('#EditCategoryModal').modal('show');
-                    },
-                    error:function(data){
-                        console.log("While data not Edit"+data);
-                    },
-                });
-            });
-            $('#updateBtn').on('click',function(e){
-                e.preventDefault();
-                var ID =$('#EditId').val();
-                $.ajax({
-                    type    : 'PATCH',
-                    url     : '/expense/category/'+ID,
-                    data    : $('#updateForm').serializeArray(),
-                    success:function(data){
-                        $('#EditCategoryModal').modal('hide');
-                        $('#updateForm')[0].reset();
-                        Swal.fire(
-                          'Success!',
-                          data,
-                          'success'
-                        );
-                    },
-                    error:function(data){
-                        console.log(data);
-                    },
-                });
-            });
-        });
-    </script>
+    <script src='/js/custom-js/expenseCategory.js'></script>
 @endsection

@@ -73,7 +73,6 @@ class AccountLedgerController extends Controller
     public function show($id)
     {
        $AccountLedgers = AccountLedger::find($id);
-
        return $AccountLedgers;
         
     }

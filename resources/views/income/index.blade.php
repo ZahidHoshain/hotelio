@@ -7,10 +7,6 @@
                     <div class="card-header bg-defult">
                         <div class="card-title">
                             <h2 class="card-title">
-                                {{-- <a href="{{ asset('income/create') }}" class="btn bg-navy text-capitalize mr-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create Booking"> 
-                                    <i class="fa-solid fa-circle-plus mr-2"></i>
-                                    Add
-                                </a> --}}
                                 <button type="button" class="btn bg-navy text-capitalize mr-3" id="AddNewBtn"><i class="fa-solid fa-circle-plus mr-2"></i>New Add</button>
                                 Income List
                             </h2>
@@ -19,7 +15,7 @@
                         <a class="btn btn-sm bg-maroon float-right text-capitalize mr-3" href="/income/delete"><i class="fa-solid fa-trash-can mr-2"></i>Delete All</a>
                     </div>
                     <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap ListTable">
+                        <table class="table table-hover table-responsive table-borderless" id="IncomeList">
                             <thead>
                                 <tr>
                                     <th>Category Name</th>
@@ -30,22 +26,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ( $Incomes as $Income)
-                                    <tr class="">
-                                        <td>{{ $Income->CategoryName }}</td>
-                                        <td>{{ $Income->Amount }}</td>
-                                        <td>{{ $Income->Description }}</td>
-                                        <td>{{ $Income->Date }}</td>
-                                        <td class="d-flex">
-                                            <a href="{{URL::to('income/'.$Income->id)}}" class="mr-3 text-purple" data-bs-toggle="View" data-bs-placement="bottom" title="View">
-                                                 <svg data-v-9a6e255c="" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="invoice-row-5036-preview-icon" class="mx-1 feather feather-eye"><path data-v-9a6e255c="" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle data-v-9a6e255c="" cx="12" cy="12" r="3"></circle></svg>
-                                            </a>
-                                            <button class="EditBtn" value="{{$Income->id}}" title="Edit" ><i class="fa-regular fa-pen-to-square mr-3 text-orange"></i></button>
-                                             
-                                            <button type="button" class="DeleteBtn" value="{{$Income->id}}"  title="Delete"><i class="fa-regular fa-trash-can mr-3 text-danger"></i></button>
-                                         </td>
-                                    </tr>
-                                @endforeach
+                                
+                                     
                             </tbody>
                         </table>
                     </div>
@@ -55,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade show" id="NewIncomelModal" role="dialog">
+        <div class="modal fade show" id="NewIncomeModal" role="dialog">
             <div class="modal-dialog modal-xl ">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -108,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade show" id="EditIncomelModal" role="dialog">
+        <div class="modal fade show" id="EditIncomeModal" role="dialog">
             <div class="modal-dialog modal-xl ">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -166,116 +148,42 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade show" id="ShowIncomeModal" role="dialog">
+            <div class="modal-dialog modal-xl ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">New Guest</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-resonsive table-bordered table-stripped table-condensed ">
+                            <tr>
+                                <th class="bg-success ">Attribute</th>
+                                <th class="bg-success ">Data</th>
+                            </tr>
+                            <tr>
+                                <td>Category Name</td>
+                                <td id="ViewCategoryName"></td>
+                            </tr>
+                            <tr>
+                                <td>Amount</td>
+                                <td id="ViewAmount"></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td id="ViewDescription"></td>
+                            </tr>
+                            <tr>
+                                <td>Date</td>
+                                <td id="ViewDate"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
-        $(document).ready(function(){
-            $('#AddNewBtn').on('click',function(e){
-                e.preventDefault();
-                $('#NewIncomelModal').modal('show');
-            });
-            $('#formResetBtn').on('click',function(e){
-                e.preventDefault();
-                $('#incomeForm')[0].reset();
-            });
-            $('#submitBtn').on('click',function(e){
-                e.preventDefault();
-                $.ajax({
-                    type    : 'POST',
-                    url     : '/income',
-                    data    : $('#incomeForm').serialize(),success:function(data){
-                        $('#incomeForm')[0].reset();
-                        $('#NewIncomelModal').modal('hide');
-                        Swal.fire(
-                          'Success!',
-                          data,
-                          'success'
-                        );
-                    },
-                    error:function(date){
-                        console.log('Error while added new Expense Item'+data);
-                    },
-                });
-            });
-
-            $('.DeleteBtn').on('click',function(e) {
-                e.preventDefault();
-                var ID = $(this).val();
-                Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if(result.isConfirmed){
-                        $.ajax({
-                            type    : "GET",
-                            url     : "/income/delete/"+ID,
-                            success:function(data){
-                                Swal.fire(
-                                    'Deleted!',
-                                    'Your file has been deleted.',
-                                    'success'
-                                );
-                            },
-                            error:function(data){
-                                Swal.fire(
-                                    'Error!',
-                                    'Delete failed !',
-                                    'error'
-                                );
-                                console.log(data);
-                            },
-                        });
-                    }
-                });         
-            });
-
-            $('.EditBtn').on('click',function(e){
-                e.preventDefault();
-                var ID = $(this).val();
-                $.ajax({
-                    type    :'GET',
-                    url     : '/income/'+ID,
-                    data    : $('#updateForm').serialize(),
-                    success:function(data){
-                        $('#updateForm')[0].reset();
-                        $('#EditID').val(data['id']);
-                        $('#EditCategoryID').val(data['CategoryID']);
-                        $('#EditAmount').val(data['Amount']);
-                        $('#DescriptionEdit').val(data['Description']);
-                        $('#DateEdit').val(data['Date']);
-                        $('#EditIncomelModal').modal('show');
-                    },
-                    error:function(data){
-                        console.log(data);
-                    },
-                });   
-            });
-            
-            $('#updateBtn').on('click',function(e){
-                e.preventDefault();
-                var ID =$('#EditID').val();
-                $.ajax({
-                    type    :"PATCH",
-                    url     : "/income/"+ID,
-                    data    : $('#updateForm').serializeArray(),
-                    success:function(data){
-                        $('#EditIncomelModal').modal('hide');
-                        $('#updateForm')[0].reset();
-                        Swal.fire(
-                          'Success!',
-                          data,
-                          'success'
-                        );
-                    },
-                    error:function(data){
-                        console.log(data);
-                    },
-                });
-            });
-        });
-    </script>
+    <script src="js/custom-js/income.js"></script>
 @endsection

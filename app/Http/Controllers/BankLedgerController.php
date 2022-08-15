@@ -25,16 +25,16 @@ class BankLedgerController extends Controller
 
         if (request()->ajax()) {
             return $BankLedgers = Datatables::of($this->dtQuery())
-            ->addColumn('action','layouts.dt_buttons')
-            ->make(true);
+                ->addColumn('action', 'layouts.dt_buttons')
+                ->make(true);
         }
         return view('bankLedger.index', compact('BankNames'));
     }
     public function dtQuery()
     {
-        return $BankLedgers = BankLedger::select('bank_ledgers.*','banks.Name as Bank')
-        ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
-        ->get();
+        return $BankLedgers = BankLedger::select('bank_ledgers.*', 'banks.Name as Bank')
+            ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
+            ->get();
     }
 
     /**
@@ -72,8 +72,12 @@ class BankLedgerController extends Controller
      */
     public function show($id)
     {
-        return BankLedger::find($id);
-        
+        // return BankLedger::find($id);
+        return BankLedger::select('bank_ledgers.*', 'banks.Name as Bank')
+            ->where('bank_ledgers.id', $id)
+            ->leftJoin('banks', 'bank_ledgers.BankID', '=', 'banks.id')
+            ->first();
+          
     }
 
     /**
@@ -139,7 +143,7 @@ class BankLedgerController extends Controller
     public function restoreAll()
     {
         BankLedger::withTrashed()->restore();
-        return back()->with('Restore All','Bank Ledger Restore Successfull');
+        return back()->with('Restore All', 'Bank Ledger Restore Successfull');
     }
 
     public function forceDelete($id)
@@ -150,7 +154,7 @@ class BankLedgerController extends Controller
 
     public function emtyTrash()
     {
-       BankLedger::onlyTrashed()->forceDelete();
-       return back(); 
+        BankLedger::onlyTrashed()->forceDelete();
+        return back();
     }
 }

@@ -67,16 +67,12 @@
                                         <i class="fa-regular fa-trash-can mr-3 text-black"></i>
                                     </button>
                                     <button value="{{$TrashBankLedger->id}}" title="Restore" class="RestoreBtn" >
-
                                         <i class="fa-solid fa-arrow-rotate-left"></i>
-
                                     </button>
-
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
-
                     </table>
                 </div>
                 <div class="card-footer">

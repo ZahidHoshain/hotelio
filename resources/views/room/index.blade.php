@@ -22,7 +22,7 @@
                     </button>
                 </div>
                 <div class="card-body table-responsive p-0">
-                    <table class="table  table-responsive table-borderless "id="RoomList">
+                    <table class="table table-responsive table-borderless "id="RoomList">
                         <thead>
 
                             <tr class="border-bottom">
@@ -34,7 +34,6 @@
                                 <th>Geyser</th>
                                 <th>Ac</th>
                                 <th>Balcony</th>
-                                {{-- <th>Bathtub</th> --}}
                                 <th>Internet</th>
                                 <th>Tv</th>
                                 <th>Price</th>
@@ -42,42 +41,90 @@
                             </tr>
 
                         </thead>
-                        {{-- <tbody>
-                            @foreach ($Rooms as $Room)
-                                <tr class="border-bottom">
-                                    <td>{{$Room->HotelName}}</td>
-                                    <td>{{$Room->RoomNo}}</td>
-                                    <td>{{$Room->Floor}}</td>
-                                    <td>{{$Room->Type}}</td>
-                                    <td>@if($Room->Geyser)<i class="fa-solid fa-square-check text-green ml-4"></i> @else <i class="fa-solid fa-square-xmark text-danger ml-4"></i> @endif</td>
-                                    <td>@if($Room->Ac)<i class="fa-solid fa-square-check text-green ml-1"></i> @else <i class="fa-solid fa-square-xmark text-danger ml-1"></i> @endif</td>
-                                    <td>@if($Room->Balcony)<i class="fa-solid fa-square-check text-green ml-4"></i> @else <i class="fa-solid fa-square-xmark text-danger ml-4"></i> @endif</td>
-                                    <td>@if($Room->Internet)<i class="fa-solid fa-square-check text-green ml-4"></i> @else <i class="fa-solid fa-square-xmark text-danger ml-4"></i> @endif</td> --}}
-                                    {{-- <td>@if($Room->Tv)<i class="fa-solid fa-square-check text-green ml-1"></i> @else <i class="fa-solid fa-square-xmark text-danger ml-1"></i> @endif</td> --}}
-                                    {{-- <td>{{$Room->Price}}</td>
-                                    <td class="d-flex">
-                                        <a href="{{ URL::to('/room/'.$Room->id) }}" class="mr-3 text-purple" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View">
-                                            <svg data-v-9a6e255c="" xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="invoice-row-5036-preview-icon" class="mx-1 feather feather-eye">
-                                                <path data-v-9a6e255c="" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                <circle data-v-9a6e255c="" cx="12" cy="12" r="3"></circle>
-                                            </svg>
-                                        </a>
-                                        <a class="" href="/room/{{ $Room->id }}/edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit">
-                                            <i class="fa-regular fa-pen-to-square mr-3 text-orange"></i></i>
-                                        </a> --}}
-
-                                        {{-- {{ Form::open(array('url' => '/room/'.$Room->id,'method' => 'DELETE')) }} --}}
-                                        {{-- <button class="DeleteBtn" value="{{$Room->id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete">
-                                            <i class="fa-regular fa-trash-can mr-3 text-danger"></i>
-                                        </button> --}}
-                                        {{-- {{ Form::close() }} --}}
-                                    {{-- </td>
-                                </tr>
-                            @endforeach
-                        </tbody> --}}
+                        <tbody>
+                            
+                        </tbody>
                     </table>
                 </div>
                 <div class="card-footer"></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade show" id="ShowRoomModal"  role="dialog">
+        <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-responsive table-stripped tabole-condensed table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+
+                            <td><b class="fs-6">Hotel:</b></td>
+                            <td><span class="fs-6" id="ViewHotel"></span></td>
+
+                            <td><b class="fs-6">RoomNo:</b></td>
+                            <td><span class="fs-6" id="ViewRoom"></span></td>
+
+                            <td><b class="fs-6">Floor:</b></td>
+                            <td><span class="fs-6" id="ViewFloor"></span></td>
+                            <td><b class="fs-6">Type:</b></td>
+                            <td><span class="fs-6" id="ViewType"></span></td>
+                            
+                        </tr>
+                        <tr>
+                            <td><b class="fs-6">Geyser:</b></td>
+                            <td><span class="fs-6" id="ViewGeyser"></span></td>
+                            <td><b class="fs-6">AC:</b></td>
+                            <td><span class="fs-6" id="ViewAC"></span></td>
+                            <td><b class="fs-6">Balcony:</b></td>
+                            <td><span class="fs-6" id="ViewBalcony"></span></td>
+                            <td><b class="fs-6">Bathtub:</b></td>
+                            <td><span class="fs-6" id="ViewBathtub"></span></td> 
+                        </tr>
+                        <tr>
+                            <td><b class="fs-6">HiComode:</b></td>
+                            <td><span class="fs-6" id="ViewHiComode"></span></td>
+                            <td><b class="fs-6">Locker:</b></td>
+                            <td><span class="fs-6" id="ViewLocker"></span></td>
+                            <td><b class="fs-6">Freeze:</b></td>
+                            <td><span class="fs-6" id="ViewFreeze"></span></td>
+                            <td><b class="fs-6">Wardrobe:</b></td>
+                            <td><span class="fs-6" id="ViewWardrobe"></span></td> 
+                        </tr>
+                        <tr>
+                            <td><b class="fs-6">Intercom:</b></td>
+                            <td><span class="fs-6" id="ViewIntercom"></span></td>
+                            <td><b class="fs-6">TV:</b></td>
+                            <td><span class="fs-6" id="ViewTV"></span></td>
+                            <td><b class="fs-6">Price:</b></td>
+                            <td><span class="fs-6" id="ViewPrice"></span></td>
+                            <td><b class="fs-6">Status:</b></td>
+                            <td><span class="fs-6" id="ViewStatus"></span></td>
+                        </tr>
+                       
+
+                    </tbody>
+                    </table>
+                    
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -137,32 +184,26 @@
                             <div class="form-group row ">
                                 <div>
                                     <div class="form-group row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-2">
                                             <div class="form-group row">
-                                                <label for="Geyser" class="col-md-3 form-label">Geyser:</label>
-                                                <div class="col-md-8">
-                                                    <div class="form-check form-check-inline ml-1">
-                                                        <input type="radio" class="form-check-input" name="Geyser" value="1">
-                                                        <label for="" class="form-check-label">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline ml-4">
-                                                        <input type="radio" class="form-check-input" name="Geyser" value="0">
-                                                        <label for="" class="form-check-label">No</label>
+                                                <label for="Geyser" class="col-md-5 form-label">Geyser:</label>
+                                                <div class="col-md-6">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="customSwitch1" name="Geyser" value="1">
+                                                        <input type="checkbox" class="custom-control-input" id="customSwitch1" name="Geyser" value="0">
+                                                        <label class="custom-control-label" for="customSwitch1"></label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-2">
                                             <div class="form-group row">
                                                 <label for="AC" class="col-md-3 form-label">AC:</label>
                                                 <div class="col-md-8">
-                                                    <div class="form-check form-check-inline ml-1">
-                                                        <input type="radio" class="form-check-input" name="AC" value="1">
-                                                        <label for="" class="form-check-label">Yes</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline ml-4">
-                                                        <input type="radio" class="form-check-input" name="AC" value="0">
-                                                        <label for="" class="form-check-label">No</label>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="ACSwitch" name="AC" value="1">
+                                                        <input type="checkbox" class="custom-control-input" id="ACSwitch" name="AC" value="0">
+                                                        <label class="custom-control-label" for="ACSwitch"></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -171,7 +212,11 @@
                                             <div class="form-group row">
                                                 <label for="Balcony" class="col-md-3 form-label">Balcony:</label>
                                                 <div class="col-md-8">
-                                                    <div class="form-check form-check-inline ml-1">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                                        <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+                                                      </div>
+                                                    {{-- <div class="form-check form-check-inline ml-1">
                                                         <input type="radio" class="form-check-input" name="Balcony" value="1">
                                                         <label for="" class="form-check-label">
                                                             Yes
@@ -182,7 +227,7 @@
                                                         <label for="" class="form-check-label">
                                                             No
                                                         </label>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div> 
@@ -360,155 +405,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(document).ready(function(){
-
-            $.noConflict();
-            var RoomList = $('#RoomList').DataTable({
-                serverSide:true,
-                processing:true,
-                colReorder:true,
-                stateSave:true,
-                responsive:true,
-                ajax:{
-                    url:'/room',
-                    type:'Get',
-                },
-                columns:
-                [
-                    {data:'id',visible:false},
-                    {data:'HotelName'},
-                    {data:'RoomNo'},
-                    {data:'Floor'},
-                    {data:'Type'},
-                    {data:'Geyser', render:function(data, type,row){
-                        return data == 1?'<i class="fa fa-check text-success"></i>':'<i class="fa fa-times text-danger"></i>';
-                    }},
-                    {data:'AC', render:function(data, type,row){
-                        return data == 1?'<i class="fa fa-check text-success"></i>':'<i class="fa-solid fa-xmark text-danger"></i>';
-                    }},
-                    {data:'Balcony', render:function(data, type,row){
-                        return data == 1?'<i class="fa fa-check text-success"></i>':'<i class="fa-solid fa-xmark text-danger"></i>';
-                    }},
-                    {data:'Internet', render:function(data, type,row){
-                        return data == 1?'<i class="fa fa-check text-success"></i>':'<i class="fa-solid fa-xmark text-danger"></i>';
-                    }},
-                    {data:'TV', render:function(data, type,row){
-                        return data == 1? '<i class="fa fa-check text-success"></i>':'<i class="fa-solid fa-xmark text-danger"></i>';
-                    }},
-                    {data:'Price'},
-                    {data:'action'}
-                ]
-            });
-
-            $('#ResetBtnForm').on('click',function(e){
-                e.preventDefault();
-                $('#NewRoomFrom')[0].reset();
-            });
-            $('#SubmitBtn').on('click',function(e){
-                e.preventDefault();
-                
-                $.ajax({
-                    type:'POST',
-                    url:'/room',
-                    data: $('#NewRoomFrom').serializeArray(),
-                    success:function(data){
-                        $('#NewRoomFrom')[0].reset();
-                        $('#NewRoomModal').modal('hide');
-                         Swal.fire(
-                          'Success!',
-                          data,
-                          'success'
-                        )
-                        RoomList.draw(false);
-                    },
-                    error:function(data){
-                        console.log('Error while adding new hotel' + data);
-                    },
-                });
-            });
-
-            $('.DeleteBtn').on('click',function(e){
-                e.preventDefault();
-                // console.log($(this).val());
-                var ID = $(this).val();
-
-                Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to delete this!",
-                  icon: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    $.ajax({
-                        type:'GET',
-                        url:'/room/delete/'+ID,
-                        success:function(data){
-                           Swal.fire(
-                              'Deleted!',
-                              'Your file has been deleted.',
-                              'success'
-                            );
-                        },
-                        error:function(data){
-                            Swal.fire(
-                              'Error!',
-                              'Delete failed !',
-                              'error'
-                            );
-
-                            console.log(data);
-                        },
-                    });
-
-                    
-                 }
-                });
-            });
-
-            $('#DeleteAllBtn').on('click',function(e){
-                e.preventDefault();
-                 Swal.fire({
-                        title: 'Are you sure?',
-                        text: "You won't be able to DeleteAll this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Yes, DeleteAll it!'
-
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                type:'GET',
-                                url:'/room/delete',
-                                success:function(data){
-                                Swal.fire(
-                                    'DeleteAll!',
-                                    'Your file has been DeleteAll.',
-                                    'success'
-                                    );
-                                },
-                                error:function(data){
-                                    Swal.fire(
-                                    'Error!',
-                                    'DeleteAll failed !',
-                                    'error'
-                                    );
-
-                                    console.log(data);
-                                },
-                            });
-
-                            
-                        }
-                    });
-            })
-
-        });
-    </script>
+    <script src="js/custom-js/room.js"></script>
 @endsection

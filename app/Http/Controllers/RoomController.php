@@ -19,6 +19,7 @@ class RoomController extends Controller
     public function index()
     {
         $Hotels = Hotel::all();
+        // $Rooms  = Room::all();
         if (request()->ajax()) {
             return $Rooms = Datatables::of($this->dtQuery())->addColumn('action','layouts.dt_buttons')->make(true);
         }
@@ -75,7 +76,7 @@ class RoomController extends Controller
         ->where('rooms.id',$id)
         ->leftJoin('hotels','rooms.HotelID','=','hotels.id')
         ->first();
-        return view('room.show',compact('Room'));
+        return $Room;
     }
 
     /**
@@ -117,32 +118,50 @@ class RoomController extends Controller
         return back()->with('Destroy','Delete Completed !');
     }
 
+    /**
+     * Delete all table list
+    */
     public function destroyAll()
     {
         Room::withTrashed()->delete();
         return back()->with('DestroyAll', 'সমস্ত ডাটাকে খালি করা হলো');
     }
+    /**
+     * View Trash page 
+    */
     public function trash()
     {
         $Rooms = Room::onlyTrashed()->get();
         // $Rooms = Room::onlyTrashed()->get();
         return view('room.trash',compact('Rooms'));
     }
+    /**
+     * table column restore
+    */
     public function restore($id)
     {
         Room::withTrashed()->where('id',$id)->restore();
         return back()->with('Restore','Restore SuccessFully !');
     }
+    /**
+     * Table  all Column list restore
+    */
     public function restoreAll()
     {
         Room::withTrashed()->restore();
         return back()->with('RestoreAll','সমস্ত ডাটাকে পুনরুদ্ধার করা হয়েছে');
     }
+    /**
+     * table remove delete
+    */
     public function forceDeleted($id)
     {
         Room::withTrashed()->where('id',$id)->forceDelete();
         return back()->with('PermanentlyDelete', 'Permanently Delete Completed !');
     }
+    /**
+     * All table list remove
+    */
     public function emptyTrash()
     {
 
