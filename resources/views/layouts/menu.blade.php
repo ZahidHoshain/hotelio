@@ -152,3 +152,20 @@
         <p>TaxSetting</p>
     </a>
 </li>
+
+@if(Auth::user()->Role == 'SuperAdmin' || Auth::user()->Role == 'Admin')
+<li class="nav-item">
+    <a href="/sms" class="nav-link {{ Request::is('sms') ? 'active' : '' }}">
+        <i class="fa fa-email nav-icon fas"></i>
+        <p>SMS</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="/payment" class="nav-link {{ Request::is('payment') ? 'active' : '' }}">
+        <i class="fa fa-email nav-icon fas"></i>
+        <p>Payment</p>
+    </a>
+</li>
+
+@endif

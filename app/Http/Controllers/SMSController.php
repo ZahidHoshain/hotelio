@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers;
 
-use App\Models\BankLedger;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Employee;
 
-class BankLedgerController extends Controller
+class SMSController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +14,46 @@ class BankLedgerController extends Controller
      */
     public function index()
     {
-        return response()->json(BankLedger::all());
+        return view('sms.index');
+    }
+
+    /**
+     * Send SMS 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function send(Request $request)
+    {
+        
+
+        if($request->Numbers == 'Employee')
+        {
+            $Employee_Numbers = Employee::all()->pluck('Phone')->toArray();
+        }
+        else
+            return $request->all();
+
+        $URL = "";
+
+        $Post = array(
+            'email' => '', 
+            'password' => '',
+            'method' => 'send_sms',            
+            'mobile' => $Employee_Numbers,
+            'mask' => '',
+            'message' => $request->Message,
+        );
+
+        $CH = curl_init($URL);
+
+        curl_setopt($CH, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($CH,CURLOPT_POST,1);
+        curl_setopt($CH, CURLOPT_POSTFIELDS, http_build_query($Post));
+        curl_setopt($CH, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($CH,CURLOPT_FAILONERROR,true);
+        curl_setopt($CH,CURLOPT_SSL_VERIFYPEER,false);
+
+        return curl_exec($CH);
     }
 
     /**
@@ -47,7 +85,7 @@ class BankLedgerController extends Controller
      */
     public function show($id)
     {
-        return response()->json(BankLedger::find($id), 200);
+        //
     }
 
     /**

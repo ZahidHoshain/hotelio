@@ -23,6 +23,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Ramsey\Uuid\Guid\Guid;
+use App\Http\Controllers\SMSController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +39,13 @@ use Ramsey\Uuid\Guid\Guid;
 require __DIR__ . '/auth.php';
 
 /*
+
 |--------------------------------------------------------------------------
 | Web Register Route
 |--------------------------------------------------------------------------
 */
 Route::resource('user', RegisteredUserController::class);
+Route::post('user/assign/role', [UserController::class,'assignRole']);
 
 Route::get('/', [HotelioController::class, 'index']);
 
@@ -279,4 +283,26 @@ Route::group(['middleware' => 'auth'],function(){
     |--------------------------------------------------------------------------
     */
     Route::get('profile/show', [ProfileController::class, 'index']);
+
+     /*
+    |--------------------------------------------------------------------------
+    | SMS Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('sms',[SMSController::class,'index']);
+    Route::post('sms/send',[SMSController::class,'send']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('payment',[PaymentController::class,'index']);
+    Route::post('payment',[PaymentController::class,'order']);   
+
 });
+
+Route::post('sslcommerz/success',[PaymentController::class,'success'])->name('payment.success');
+Route::post('sslcommerz/failure',[PaymentController::class,'failure'])->name('payment.failure');
+Route::post('sslcommerz/cancel',[PaymentController::class,'cancel'])->name('payment.cancel');
+Route::post('sslcommerz/ipn',[PaymentController::class,'ipn'])->name('payment.ipn');
