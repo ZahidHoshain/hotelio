@@ -1,0 +1,3 @@
+<!---laravel date Show--->
+
+<input type="date" value="{{Carbon\Carbon::parse($package->start_date)->format('Y-m-d')}}" name="start_date">
